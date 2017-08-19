@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+*.layout
+*.depend
 
 # Compiled Object files
 *.slo
@@ -30,3 +32,4 @@
 *.exe
 *.out
 *.app
+*.run
