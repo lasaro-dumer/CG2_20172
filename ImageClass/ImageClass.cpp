@@ -111,7 +111,61 @@ int ImageClass::Load(const char * nome) {
 // **********************************************************************
 void ImageClass::Save(const char *nome) {
 	// save_bmp(nome, data, sizeX, sizeY);
+	FlipY();
+	SOIL_save_image	(nome, SOIL_SAVE_TYPE_BMP,
+		SizeX(), SizeY(), Channels(), GetImagePtr());
+    FlipY();
 }
+/*
+void ImageClass::Save(const char *nome) {
+    unsigned int x, y, w = SizeX(), h = SizeY();
+    FILE *f;
+    unsigned char *img = NULL;
+    img = (unsigned char *)malloc(3*w*h);
+
+    int filesize = 54 + 3*w*h;  //w is your image width, h is image height, both int
+
+    unsigned char bmpfileheader[14] = {'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0};
+    unsigned char bmpinfoheader[40] = {40,0,0,0, 0,0,0,0, 0,0,0,0, 1,0, 24,0};
+    unsigned char bmppad[3] = {0,0,0};
+
+    bmpfileheader[ 2] = (unsigned char)(filesize    );
+    bmpfileheader[ 3] = (unsigned char)(filesize>> 8);
+    bmpfileheader[ 4] = (unsigned char)(filesize>>16);
+    bmpfileheader[ 5] = (unsigned char)(filesize>>24);
+
+    bmpinfoheader[ 4] = (unsigned char)(       w    );
+    bmpinfoheader[ 5] = (unsigned char)(       w>> 8);
+    bmpinfoheader[ 6] = (unsigned char)(       w>>16);
+    bmpinfoheader[ 7] = (unsigned char)(       w>>24);
+    bmpinfoheader[ 8] = (unsigned char)(       h    );
+    bmpinfoheader[ 9] = (unsigned char)(       h>> 8);
+    bmpinfoheader[10] = (unsigned char)(       h>>16);
+    bmpinfoheader[11] = (unsigned char)(       h>>24);
+
+    f = fopen(nome,"wb");
+    fwrite(bmpfileheader,1,14,f);
+    fwrite(bmpinfoheader,1,40,f);
+
+    for(int i=0; i<w; i++)
+    {
+        for(int j=0; j<h; j++)
+        {
+            x=i; y=(h-1)-j;
+            img[(x+y*w)*3+2] = data[(x+y*w)*3+0];
+            img[(x+y*w)*3+1] = data[(x+y*w)*3+1];
+            img[(x+y*w)*3+0] = data[(x+y*w)*3+2];
+        }
+    }
+
+    for(int i=h-1; i>-1; i--)
+    {
+        fwrite(img+(w*(h-i-1)*3),3,w,f);
+        fwrite(bmppad,1,(4-(w*3)%4)%4,f);
+    }
+    fclose(f);
+}
+*/
 // **********************************************************************
 //
 //
@@ -241,6 +295,19 @@ void ImageClass::DrawBox(int x1,int y1,int x2,int y2,unsigned char r, unsigned c
 	DrawLineH(y2, x1, x2, r,g,b);
 	DrawLineV(x1, y1, y2, r,g,b);
 	DrawLineV(x2, y1, y2, r,g,b);
+}
+// **************************************************************
+//
+// **************************************************************
+void ImageClass::FillBox(int x1,int y1,int x2,int y2,unsigned char r, unsigned char g, unsigned char b )
+{
+
+    for (int y = y1; y<=y2; y++)
+        {
+            DrawLineH(y, x1, x2, r,g,b);
+        }
+
+
 }
 
 // **************************************************************

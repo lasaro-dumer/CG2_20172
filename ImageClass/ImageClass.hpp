@@ -18,7 +18,7 @@ using namespace std;
 
 #ifdef __APPLE__
 /* Para usar o include da GLUT desta forma, adicione as
-seguintes clausulas nas configurac›es do Linker:
+seguintes clausulas nas configuracï¿½es do Linker:
 -framework CoreFoundation
 -framework GLUT
 -framework OpenGL
@@ -143,4 +143,5 @@ public:
 
 	void DrawBox(int x1,int y1,int x2,int y2,unsigned char r, unsigned char g, unsigned char b);
 	void DrawLine(int x0,int y0,int x1, int y1,unsigned char r, unsigned char g, unsigned char b  );
+	void FillBox(int x1,int y1,int x2,int y2,unsigned char r, unsigned char g, unsigned char b );
 };
