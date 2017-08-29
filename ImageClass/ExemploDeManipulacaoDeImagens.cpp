@@ -29,14 +29,8 @@ using namespace std;
 
 #include "ImageClass.hpp"
 
-#ifndef dImage
-#define dImage
 ImageClass Image;
-#endif
-#ifndef dNewImage
-#define dNewImage
 ImageClass NewImage;
-#endif
 
 const int LIMIAR = 120;
 #define LARGURA_JAN 1000
