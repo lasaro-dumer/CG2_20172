@@ -2,7 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include "SOIL/SOIL.h"
-#include "ImageClass.hpp"
+#include "Helpers/ImageClass.hpp"
+#include "Helpers/util.hpp"
 
 using namespace std;
 ImageClass Image;
@@ -22,19 +23,19 @@ void init()
     string path = "";
 
     nome =  path + nome;
-    cout << "imagem a ser carregada: *" << nome << "*" << endl;
+    cout << "Image to load: *" << nome << "*" << endl;
     r = Image.Load(nome.c_str()); // Carrega uma imagem
 
 
     if (!r) exit(1); // Erro na carga da imagem
-    else cout << ("Imagem carregada!\n");
+    else cout << ("Image loaded!\n");
 
     // Ajusta o tamnho da imagem da direita, para que ela
     // passe a ter o mesmo tamnho da imagem recem carregada
     // Caso precise alterar o tamanho da nova imagem, mude os parâmetros
     // da na chamada abaixo
     NewImage.SetSize(Image.SizeX(), Image.SizeY(), Image.Channels());
-    cout << "Nova Imagem Criada" << endl;
+    cout << "New image created" << endl;
 
 }
 // **********************************************************************
@@ -101,26 +102,9 @@ void keyboard ( unsigned char key, int x, int y )
         Image.Delete();
         exit ( 0 );   // a tecla ESC for pressionada
         break;
-    case '2':
-        //ConvertBlackAndWhite();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
-        break;
-
-    case 'g':
-        //ConvertToGrayscale();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
-        break;
-
-    case 'b':
-        //DetectImageBorders();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
-        break;
-    case 'i':
-        //InvertImage();
-        glutPostRedisplay();    // obrigatório para redesenhar a tela
-        break;
-     case 'm':
-        //Mediana();
+    case 'm':
+        util::medianWindowSize = 3;
+        util::MedianFilter(&Image, &NewImage, util::medianWindowSize);
         glutPostRedisplay();    // obrigatório para redesenhar a tela
         break;
     default:
