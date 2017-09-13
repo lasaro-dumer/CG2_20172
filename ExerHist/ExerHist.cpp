@@ -6,45 +6,31 @@
 #include "SOIL/SOIL.h"
 #include "Helpers/ImageClass.hpp"
 #include "Helpers/util.hpp"
+#include "Helpers/carousel.hpp"
 
 using namespace std;
 ImageClass Imagem;
 ImageClass NewImage;
-std::vector<string> imgList;
-std::vector<string>::iterator itImgList;
+carousel* imgCarousel;
 const int LIMIAR = 120;
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
 
-void previousImage() {
-	if(itImgList == imgList.begin())
-		itImgList = imgList.end();
-	--itImgList;
-	util::LoadNewImage(*itImgList, &Imagem, &NewImage);
-}
-
-void nextImage() {
-	++itImgList;
-	if(itImgList == imgList.end())
-		itImgList = imgList.begin();
-	util::LoadNewImage(*itImgList, &Imagem, &NewImage);
-}
 // **********************************************************************
 //  void init(void)
 // **********************************************************************
 void init()
 {
 	util::medianWindowSize = 3;
-	imgList.push_back("imgs/0648.png");
-	imgList.push_back("imgs/0649.png");
-	imgList.push_back("imgs/0695.png");
-	imgList.push_back("imgs/Falcao.jpg");
-	imgList.push_back("imgs/Ruido1.bmp");
-	imgList.push_back("imgs/Ruido2.bmp");
-	imgList.push_back("imgs/Ruido3.bmp");
-	itImgList = imgList.begin();
-	--itImgList;
-	nextImage();
+	imgCarousel = new carousel(&Imagem, &NewImage);
+	imgCarousel->addImage("imgs/0648.png");
+	imgCarousel->addImage("imgs/0649.png");
+	imgCarousel->addImage("imgs/0695.png");
+	imgCarousel->addImage("imgs/Falcao.jpg");
+	imgCarousel->addImage("imgs/Ruido1.bmp");
+	imgCarousel->addImage("imgs/Ruido2.bmp");
+	imgCarousel->addImage("imgs/Ruido3.bmp");
+	imgCarousel->start();
 }
 // **********************************************************************
 //  void reshape( int w, int h )
@@ -119,11 +105,11 @@ void keyboard ( unsigned char key, int x, int y )
 			glutPostRedisplay();	// obrigatório para redesenhar a tela
 			break;
 		case ',':
-			previousImage();
+			imgCarousel->previousImage();
 			glutPostRedisplay();
 			break;
 		case '.':
-			nextImage();
+			imgCarousel->nextImage();
 			glutPostRedisplay();
 			break;
 		default:
