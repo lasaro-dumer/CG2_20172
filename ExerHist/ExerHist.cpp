@@ -12,16 +12,19 @@ ImageClass Imagem;
 ImageClass NewImage;
 std::vector<string> imgList;
 std::vector<string>::iterator itImgList;
-bool firstImage = true;
 const int LIMIAR = 120;
 #define LARGURA_JAN 1000
 #define ALTURA_JAN 500
 
+void previousImage() {
+	if(itImgList == imgList.begin())
+		itImgList = imgList.end();
+	--itImgList;
+	util::LoadNewImage(*itImgList, &Imagem, &NewImage);
+}
+
 void nextImage() {
-	if(firstImage)
-		firstImage = false;
-	else
-		++itImgList;
+	++itImgList;
 	if(itImgList == imgList.end())
 		itImgList = imgList.begin();
 	util::LoadNewImage(*itImgList, &Imagem, &NewImage);
@@ -40,6 +43,7 @@ void init()
 	imgList.push_back("imgs/Ruido2.bmp");
 	imgList.push_back("imgs/Ruido3.bmp");
 	itImgList = imgList.begin();
+	--itImgList;
 	nextImage();
 }
 // **********************************************************************
@@ -48,7 +52,6 @@ void init()
 // **********************************************************************
 void reshape( int w, int h )
 {
-
 	// Reset the coordinate system before modifying
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -115,9 +118,13 @@ void keyboard ( unsigned char key, int x, int y )
 			util::CopyResultToMain(&Imagem, &NewImage);
 			glutPostRedisplay();	// obrigatório para redesenhar a tela
 			break;
-		case 'x':
+		case ',':
+			previousImage();
+			glutPostRedisplay();
+			break;
+		case '.':
 			nextImage();
-			glutPostRedisplay();	// obrigatório para redesenhar a tela
+			glutPostRedisplay();
 			break;
 		default:
 			std::cout << "key:"<<key << '\n';
