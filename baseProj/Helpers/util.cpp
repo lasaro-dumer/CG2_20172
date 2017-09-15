@@ -3,6 +3,7 @@
 
 int util::currentMode;
 int util::medianWindowSize = 3;
+int util::threshold = 128;
 
 void util::CreateHistogram(ImageClass* image, ImageClass* resultImage)
 {
@@ -77,6 +78,23 @@ void util::MedianFilter(ImageClass* image, ImageClass* resultImage) {
 	std::cout << "ended MedianFilter" << '\n';
 }
 
+void util::ThresholdSegmentation(ImageClass* image, ImageClass* resultImage) {
+	int  x, y;
+	resultImage->SetSize(image->SizeX(), image->SizeY(), image->Channels());
+	image->CopyTo(resultImage);
+
+	std::cout << "starting ThresholdSegmentation..." << '\n';
+	for(x = 0; x < resultImage->SizeX(); x++){
+		for(y = 0; y < resultImage->SizeY(); y++){
+			if(resultImage->GetPointIntensity(x, y) <= util::threshold)
+				resultImage->DrawPixel(x,y ,255,255,255);
+			else
+				resultImage->DrawPixel(x,y ,0,0,0);
+		}
+	}
+	std::cout << "ended ThresholdSegmentation" << '\n';
+}
+
 void util::LoadNewImage(string path, ImageClass* image, ImageClass* resultImage){
 	int r;
 	cout << "Image to load: '" << path << "'" << endl;
@@ -108,6 +126,11 @@ void util::IncValue() {
 	switch (util::currentMode) {
 		case CGM_MEDIAN_SIZE:
 			util::medianWindowSize++;
+			std::cout << "medianWindowSize: " << util::medianWindowSize << '\n';
+			break;
+		case CGM_THRESHOLD_SEG:
+			util::threshold++;
+			std::cout << "threshold: " << util::threshold << '\n';
 			break;
 		default:
 			break;
@@ -118,6 +141,11 @@ void util::DecValue() {
 	switch (util::currentMode) {
 		case CGM_MEDIAN_SIZE:
 			util::medianWindowSize--;
+			std::cout << "medianWindowSize: " << util::medianWindowSize << '\n';
+			break;
+		case CGM_THRESHOLD_SEG:
+			util::threshold--;
+			std::cout << "threshold: " << util::threshold << '\n';
 			break;
 		default:
 			break;

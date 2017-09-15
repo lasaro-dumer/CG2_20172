@@ -16,6 +16,7 @@ public:
 
 	void static CreateHistogram(ImageClass* image, ImageClass* resultImage);
 	void static MedianFilter(ImageClass* image, ImageClass* resultImage);
+	void static ThresholdSegmentation(ImageClass* image, ImageClass* resultImage);
 	void static LoadNewImage(string path, ImageClass* image, ImageClass* resultImage);
 	void static CopyResultToMain(ImageClass* image, ImageClass* resultImage);
 	void static SwitchMode(int newMode);
