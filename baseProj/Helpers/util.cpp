@@ -1,7 +1,8 @@
 #include <array>
 #include "util.hpp"
 
-int util::medianWindowSize;
+int util::currentMode;
+int util::medianWindowSize = 3;
 
 void util::CreateHistogram(ImageClass* image, ImageClass* resultImage)
 {
@@ -44,9 +45,9 @@ void util::CreateHistogram(ImageClass* image, ImageClass* resultImage)
 	}
 }
 
-void util::MedianFilter(ImageClass* image, ImageClass* resultImage, int windowSize) {
+void util::MedianFilter(ImageClass* image, ImageClass* resultImage) {
 	int wWidth, wHeight, x, y;
-	wWidth = wHeight = windowSize;
+	wWidth = wHeight = util::medianWindowSize;
 	int edgex = (wWidth / 2);
 	int edgey = (wHeight / 2);
 
@@ -97,4 +98,28 @@ void util::CopyResultToMain(ImageClass* image, ImageClass* resultImage){
 	resultImage->CopyTo(image);
 	resultImage->SetSize(image->SizeX(), image->SizeY(), image->Channels());
 	cout << "Copied result to source" << endl;
+}
+
+void util::SwitchMode(int newMode) {
+	currentMode = newMode;
+}
+
+void util::IncValue() {
+	switch (util::currentMode) {
+		case CGM_MEDIAN_SIZE:
+			util::medianWindowSize++;
+			break;
+		default:
+			break;
+	}
+}
+
+void util::DecValue() {
+	switch (util::currentMode) {
+		case CGM_MEDIAN_SIZE:
+			util::medianWindowSize--;
+			break;
+		default:
+			break;
+	}
 }

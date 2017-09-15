@@ -21,15 +21,29 @@ const int LIMIAR = 120;
 // **********************************************************************
 void init()
 {
-	util::medianWindowSize = 3;
+	util::SwitchMode(CGM_MEDIAN_SIZE);
 	imgCarousel = new carousel(&Imagem, &NewImage);
-	imgCarousel->addImage("imgs/0648.png");
-	imgCarousel->addImage("imgs/0649.png");
-	imgCarousel->addImage("imgs/0695.png");
-	imgCarousel->addImage("imgs/Falcao.jpg");
-	imgCarousel->addImage("imgs/Ruido1.bmp");
-	imgCarousel->addImage("imgs/Ruido2.bmp");
-	imgCarousel->addImage("imgs/Ruido3.bmp");
+	// imgCarousel->addImage("imgs/0648.png");
+	// imgCarousel->addImage("imgs/0649.png");
+	// imgCarousel->addImage("imgs/0695.png");
+	// imgCarousel->addImage("imgs/Falcao.jpg");
+	// imgCarousel->addImage("imgs/Ruido1.bmp");
+	// imgCarousel->addImage("imgs/Ruido2.bmp");
+	// imgCarousel->addImage("imgs/Ruido3.bmp");
+	imgCarousel->addImage("imgs/T1/1Celula/01_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/1Celula/02_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/1Celula/03_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/1Celula/04_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/2Celulas/01_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/2Celulas/02_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/2Celulas/03_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/2Celulas/04_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/2Celulas/05_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/3Celulas/01_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/3Celulas/02_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/3Celulas/03_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/3Celulas/04_Train_DataSet.png");
+	imgCarousel->addImage("imgs/T1/3Celulas/05_Train_DataSet.png");
 	imgCarousel->start();
 }
 // **********************************************************************
@@ -97,7 +111,7 @@ void keyboard ( unsigned char key, int x, int y )
 			glutPostRedisplay();	// obrigatório para redesenhar a tela
 			break;
 		case '2':
-			util::MedianFilter(&Imagem, &NewImage, util::medianWindowSize);
+			util::MedianFilter(&Imagem, &NewImage);
 			glutPostRedisplay();	// obrigatório para redesenhar a tela
 			break;
 		case 'c':
@@ -111,6 +125,13 @@ void keyboard ( unsigned char key, int x, int y )
 		case '.':
 			imgCarousel->nextImage();
 			glutPostRedisplay();
+			break;
+		case '-':
+			util::DecValue();
+			break;
+		case '=':
+		case '+':
+			util::IncValue();
 			break;
 		default:
 			std::cout << "key:"<<key << '\n';
@@ -126,14 +147,14 @@ void arrow_keys ( int a_keys, int x, int y )
 	switch ( a_keys )
 	{
 	case GLUT_KEY_UP:	   // When Up Arrow Is Pressed...
-		util::medianWindowSize++;
-		std::cout << "medianWindowSize:"<<util::medianWindowSize << '\n';
 		break;
 	case GLUT_KEY_DOWN:	 // When Down Arrow Is Pressed...
-		util::medianWindowSize--;
-		std::cout << "medianWindowSize:"<<util::medianWindowSize << '\n';
+		break;
+	case GLUT_KEY_F1:
+		std::cout << "F1" << '\n';
 		break;
 	default:
+		std::cout << "a_keys:"<<a_keys << '\n';
 		break;
 	}
 }
