@@ -101,22 +101,26 @@ void keyboard ( unsigned char key, int x, int y )
 
 	switch ( key )
 	{
-		case 27: // Termina o programa qdo
+		case 27:
 			NewImage.Delete();
 			Imagem.Delete();
-			exit ( 0 );   // a tecla ESC for pressionada
+			exit ( 0 );
 			break;
 		case '1':
 			util::CreateHistogram(&Imagem, &NewImage);
-			glutPostRedisplay();	// obrigatório para redesenhar a tela
+			glutPostRedisplay();
 			break;
 		case '2':
 			util::MedianFilter(&Imagem, &NewImage);
-			glutPostRedisplay();	// obrigatório para redesenhar a tela
+			glutPostRedisplay();
+			break;
+		case '3':
+			util::ThresholdSegmentation(&Imagem, &NewImage);
+			glutPostRedisplay();
 			break;
 		case 'c':
 			util::CopyResultToMain(&Imagem, &NewImage);
-			glutPostRedisplay();	// obrigatório para redesenhar a tela
+			glutPostRedisplay();
 			break;
 		case ',':
 			imgCarousel->previousImage();
@@ -152,6 +156,15 @@ void arrow_keys ( int a_keys, int x, int y )
 		break;
 	case GLUT_KEY_F1:
 		std::cout << "F1" << '\n';
+		break;
+	case GLUT_KEY_F2:
+		std::cout << "F2" << '\n';
+		break;
+	case GLUT_KEY_F3:
+		std::cout << "F3" << '\n';
+		break;
+	case GLUT_KEY_F4:
+		util::SwitchMode(CGM_THRESHOLD_SEG);
 		break;
 	default:
 		std::cout << "a_keys:"<<a_keys << '\n';
