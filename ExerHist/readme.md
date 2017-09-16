@@ -1,4 +1,9 @@
 #### Controls
+#### Controls
+
+**`F1`** Set configuration mode to Median window size
+
+**`F4`** Set configuration mode to Threshold value
 
 **`F1`** Set configuration mode to Median window size
 
