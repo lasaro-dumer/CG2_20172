@@ -23,13 +23,15 @@ void init()
 {
 	util::SwitchMode(CGM_MEDIAN_SIZE);
 	imgCarousel = new carousel(&Imagem, &NewImage);
-	// imgCarousel->addImage("imgs/0648.png");
-	// imgCarousel->addImage("imgs/0649.png");
-	// imgCarousel->addImage("imgs/0695.png");
-	// imgCarousel->addImage("imgs/Falcao.jpg");
-	// imgCarousel->addImage("imgs/Ruido1.bmp");
-	// imgCarousel->addImage("imgs/Ruido2.bmp");
-	// imgCarousel->addImage("imgs/Ruido3.bmp");
+	imgCarousel->addImage("imgs/0648.png");
+	imgCarousel->addImage("imgs/0649.png");
+	imgCarousel->addImage("imgs/0695.png");
+	imgCarousel->addImage("imgs/Falcao.jpg");
+	imgCarousel->addImage("imgs/Ruido1.bmp");
+	imgCarousel->addImage("imgs/Ruido2.bmp");
+	imgCarousel->addImage("imgs/Ruido3.bmp");
+	imgCarousel->addImage("imgs/Samples/Median_filter_example1.png");
+	imgCarousel->addImage("imgs/Samples/sample1.bmp");
 	imgCarousel->addImage("imgs/T1/1Celula/01_Train_DataSet.png");
 	imgCarousel->addImage("imgs/T1/1Celula/02_Train_DataSet.png");
 	imgCarousel->addImage("imgs/T1/1Celula/03_Train_DataSet.png");
@@ -118,6 +120,10 @@ void keyboard ( unsigned char key, int x, int y )
 			util::ThresholdSegmentation(&Imagem, &NewImage);
 			glutPostRedisplay();
 			break;
+		case '4':
+			util::MedianSegmentation(&Imagem, &NewImage);
+			glutPostRedisplay();
+			break;
 		case 'c':
 			util::CopyResultToMain(&Imagem, &NewImage);
 			glutPostRedisplay();
@@ -155,7 +161,7 @@ void arrow_keys ( int a_keys, int x, int y )
 	case GLUT_KEY_DOWN:	 // When Down Arrow Is Pressed...
 		break;
 	case GLUT_KEY_F1:
-		std::cout << "F1" << '\n';
+		util::SwitchMode(CGM_MEDIAN_SIZE);
 		break;
 	case GLUT_KEY_F2:
 		std::cout << "F2" << '\n';

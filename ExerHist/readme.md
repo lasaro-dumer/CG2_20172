@@ -1,5 +1,4 @@
 #### Controls
-#### Controls
 
 **`F1`** Set configuration mode to Median window size
 

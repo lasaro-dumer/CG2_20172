@@ -11,11 +11,13 @@ class util {
 	int static currentMode;
 	int static medianWindowSize;
 	int static threshold;
+	array<int,255> static levels;
 public:
 	int static iGtJ (int* i,int* j) { return (*i>*j); }
 
 	void static CreateHistogram(ImageClass* image, ImageClass* resultImage);
 	void static MedianFilter(ImageClass* image, ImageClass* resultImage);
+	void static MedianSegmentation(ImageClass* image, ImageClass* resultImage);
 	void static ThresholdSegmentation(ImageClass* image, ImageClass* resultImage);
 	void static LoadNewImage(string path, ImageClass* image, ImageClass* resultImage);
 	void static CopyResultToMain(ImageClass* image, ImageClass* resultImage);
