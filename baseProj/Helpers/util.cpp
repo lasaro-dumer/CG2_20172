@@ -1,5 +1,6 @@
 #include <array>
 #include <vector>
+#include <math.h>
 #include "util.hpp"
 
 int util::currentMode;
@@ -123,6 +124,172 @@ void util::MedianSegmentation(ImageClass* image, ImageClass* resultImage) {
 	}
 	std::cout << "ended MedianSegmentation" << '\n';
 	std::cout << "pixels changed: " << pixelsChanged << '\n';
+}
+
+void util::SobelFilter(ImageClass* image, ImageClass* resultImage) {
+	// MAKE THE THINGS
+	int wWidth, wHeight, x, y;
+	wWidth = wHeight = util::medianWindowSize;
+	int edgex = (wWidth / 2);
+	int edgey = (wHeight / 2);
+
+	// DEFINE SOBEL OPERATOR
+	// double x_op[3][3] =
+	// 	{
+	// 		{-1, 0, 1},
+	// 		{-2, 0, 2},
+	// 		{-1, 0, 1}
+	// 	};
+	// double y_op[3][3] =
+	// 	{
+	// 		{1, 2, 1},
+	// 		{0, 0, 0},
+	// 		{-1, -2, -1}
+	// 	};
+	double x_op[3][3] =
+		{
+			{3, 0, -3},
+			{10, 0, -10},
+			{3, 0, -3}
+		};
+	double y_op[3][3] =
+		{
+			{3, 10, 3},
+			{0, 0, 0},
+			{-3, -10, -3}
+		};
+
+	resultImage->SetSize(image->SizeX(), image->SizeY(), image->Channels());
+	image->CopyTo(resultImage);
+
+	std::cout << "starting SobelFilter..." << '\n';
+	std::cout << "array of "<<wWidth<<"x"<<wHeight<< " in an image of "<<resultImage->SizeX()<<"x"<<resultImage->SizeY()<<"\n";
+
+	// CALCULATE CONVOLUTION?
+	for(x = edgex; x<=(resultImage->SizeX() - edgex); x++){
+		for(y = edgey; y<=(resultImage->SizeY() - edgey); y++){
+
+			short x_weight=0;
+    	short y_weight=0;
+
+			for(int fx=0; fx < wWidth; fx++){
+				for(int fy=0; fy < wHeight; fy++){
+					int x2=x+fx-edgex;
+					int y2=y+fy-edgey;
+					x_weight += image->GetPointIntensity(x2,y2)*x_op[fx][fy];
+					y_weight += image->GetPointIntensity(x2,y2)*y_op[fx][fy];
+				}
+			}
+
+			short val=sqrt((x_weight^2)+(y_weight^2));
+			// This value means something, but I haven't figured out what yet. But it changes the lines.
+			if(val>5)
+        val=0;
+    	else if(val<5)
+        val=255;
+
+			// image->ReadPixel(x,y,r,g,b);
+			// resultImage->DrawPixel(x,y,0.3*val*r,0.59*val*g,0.11*val*b);
+			resultImage->DrawPixel(x,y,val,val,val);
+		}
+	}
+
+	std::cout << "Finished SobelFilter" << '\n';
+}
+
+void util::BinaryDilation(ImageClass* image, ImageClass* resultImage) {
+	// MAKE THE THINGS
+	int wWidth, wHeight, x, y;
+	wWidth = wHeight = util::medianWindowSize;
+	int edgex = (wWidth / 2);
+	int edgey = (wHeight / 2);
+
+	resultImage->SetSize(image->SizeX(), image->SizeY(), image->Channels());
+	image->CopyTo(resultImage);
+
+	double op[3][3] =
+		{
+			{1, 1, 1},
+			{1, 1, 1},
+			{1, 1, 1}
+		};
+
+	std::cout << "starting BinaryDilation..." << '\n';
+	std::cout << "array of "<<wWidth<<"x"<<wHeight<< " in an image of "<<resultImage->SizeX()<<"x"<<resultImage->SizeY()<<"\n";
+
+	// CALCULATE CONVOLUTION?
+	for(x = edgex; x<=(resultImage->SizeX() - edgex); x++){
+		for(y = edgey; y<=(resultImage->SizeY() - edgey); y++){
+
+			short weight=0;
+			short val=255;
+
+			for(int fx=0; fx < wWidth; fx++){
+				for(int fy=0; fy < wHeight; fy++){
+					int x2=x+fx-edgex;
+					int y2=y+fy-edgey;
+					weight = image->GetPointIntensity(x2,y2)*op[fx][fy];
+					if(val>weight)
+						val = weight;
+				}
+			}
+
+			// image->ReadPixel(x,y,r,g,b);
+			// resultImage->DrawPixel(x,y,0.3*val*r,0.59*val*g,0.11*val*b);
+			resultImage->DrawPixel(x,y,val,val,val);
+		}
+	}
+
+	std::cout << "Finished BinaryDilation" << '\n';
+}
+
+void util::HighPassFilter(ImageClass* image, ImageClass* resultImage) {
+	// MAKE THE THINGS
+	int wWidth, wHeight, x, y;
+	wWidth = wHeight = util::medianWindowSize;
+	int edgex = (wWidth / 2);
+	int edgey = (wHeight / 2);
+
+	double op[3][3] =
+		{
+			{-1, -1, -1},
+			{-1, 9, -1},
+			{-1, -1, -1}
+		};
+
+	resultImage->SetSize(image->SizeX(), image->SizeY(), image->Channels());
+	image->CopyTo(resultImage);
+
+	std::cout << "starting HighPassFilter..." << '\n';
+	std::cout << "array of "<<wWidth<<"x"<<wHeight<< " in an image of "<<resultImage->SizeX()<<"x"<<resultImage->SizeY()<<"\n";
+
+	// CALCULATE CONVOLUTION?
+	for(x = edgex; x<=(resultImage->SizeX() - edgex); x++){
+		for(y = edgey; y<=(resultImage->SizeY() - edgey); y++){
+
+			short weight=0;
+
+			for(int fx=0; fx < wWidth; fx++){
+				for(int fy=0; fy < wHeight; fy++){
+					int x2=x+fx-edgex;
+					int y2=y+fy-edgey;
+					weight += image->GetPointIntensity(x2,y2)*op[fx][fy];
+				}
+			}
+
+			// THE WEIGHT HERE IS THE THRESHOLD OF PASSAGE AND INDICATES HOW WELL THE LINES ADEQUATE
+			if(weight>200)
+        weight=255;
+    	else if(weight<200)
+        weight=0;
+
+			// image->ReadPixel(x,y,r,g,b);
+			// resultImage->DrawPixel(x,y,0.3*val*r,0.59*val*g,0.11*val*b);
+			resultImage->DrawPixel(x,y,weight,weight,weight);
+		}
+	}
+
+	std::cout << "Finished HighPassFilter" << '\n';
 }
 
 void util::ThresholdSegmentation(ImageClass* image, ImageClass* resultImage) {

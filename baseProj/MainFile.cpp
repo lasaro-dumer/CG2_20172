@@ -18,7 +18,8 @@ void init()
 {
     int r;
     // Carrega a uma image
-    string nome = "imgs/Falcao.jpg";
+    string nome = "imgs/T1/1Celula/01_Train_DataSet.png";
+    // string nome = "imgs/Falcao.jpg";
 
     string path = "";
 
@@ -103,9 +104,24 @@ void keyboard ( unsigned char key, int x, int y )
         exit ( 0 );   // a tecla ESC for pressionada
         break;
     case 'm':
-        util::medianWindowSize = 3;
-        util::MedianFilter(&Image, &NewImage, util::medianWindowSize);
+        util::MedianFilter(&Image, &NewImage);
         glutPostRedisplay();    // obrigatório para redesenhar a tela
+        break;
+    case 's':
+        util::SobelFilter(&Image, &NewImage);
+        glutPostRedisplay();
+        break;
+    case 'h':
+        util::HighPassFilter(&Image, &NewImage);
+        glutPostRedisplay();
+        break;
+    case 'd':
+        util::BinaryDilation(&Image, &NewImage);
+        glutPostRedisplay();
+        break;
+    case 'r':
+        Image = NewImage;
+        glutPostRedisplay();
         break;
     default:
         break;
