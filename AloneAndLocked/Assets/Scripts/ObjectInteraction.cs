@@ -9,12 +9,17 @@ public class ObjectInteraction : MonoBehaviour
     private float grabbedObjectSize;
     public float range = 2.5f;
     public float force = 5000f;
+    public GameObject m_ElevatorController;
+    [HideInInspector]
+    public bool ElevatorMoving;
+    private ElevatorController Elevator;
     private float throwForce;
     private bool grabbedShouldCollide;
     // Use this for initialization
     void Start()
     {
         grabbedObject = null;
+        Elevator = m_ElevatorController.GetComponent<ElevatorController>();
     }
 
     public GameObject GetTargettedObject()
@@ -73,6 +78,7 @@ public class ObjectInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ElevatorMoving = Elevator.ElevatorMoving;
         if (CrossPlatformInputManager.GetButtonDown("Grab"))
         {
             if (grabbedObject == null)
@@ -85,6 +91,30 @@ public class ObjectInteraction : MonoBehaviour
             if (grabbedObject != null)
                 ThrowObject();
         }
+        else if (CrossPlatformInputManager.GetButtonDown("GoUp"))
+        {
+            Debug.Log("GoUp pressed");
+            if (!ElevatorMoving)
+            {
+                //Call == "ElevatorUp" && 
+                Elevator.ElevatorGO("ElevatorUp");
+            }
+        }
+        else if (CrossPlatformInputManager.GetButtonDown("GoDown"))
+        {
+            Debug.Log("GoDown pressed");
+            if (!ElevatorMoving)
+            {
+                //Call == "ElevatorDown" && 
+                Elevator.ElevatorGO("ElevatorDown");
+            }
+        }
+        else
+        {
+            Debug.Log("ElevatorMoving:" + ElevatorMoving);
+        }
+
+
         if (grabbedObject != null)
         {
             Vector3 newPosition = Camera.main.transform.position + Camera.main.transform.forward * range;
