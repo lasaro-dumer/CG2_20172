@@ -13,7 +13,13 @@ using System.Collections;
 
 	[RequireComponent (typeof (AudioSource))]
 public class ElevatorController : MonoBehaviour {
-	
+
+    public enum ElevatorDirection
+    {
+        Up,
+        Down
+    }
+
 	[Tooltip("Elevator move speed.")]
 	public float elevatorSpeed = 0.05f;
 	
@@ -26,7 +32,7 @@ public class ElevatorController : MonoBehaviour {
 	public int CurrentFloor = 0;
 	
 	private int floorNumber = 0;
-	private string elevatorDirection;
+	private ElevatorDirection elevatorDirection;
 	[HideInInspector]
 	public bool ElevatorMoving;
 	private bool ElevatorMax;
@@ -41,7 +47,7 @@ public class ElevatorController : MonoBehaviour {
 		this.GetComponent<AudioSource>().Stop();
 	}
 	
-	public void ElevatorGO (string ElevatorDirection) {
+	public void ElevatorGO (ElevatorDirection ElevatorDirection) {
 		elevatorDirection = ElevatorDirection;
 		FloorNumber();
 		soundplayed = false;
@@ -51,11 +57,11 @@ public class ElevatorController : MonoBehaviour {
 	void FloorNumber ()
 	{
 		floorNumber = Mathf.Clamp(floorNumber, 0, ElevatorFloors.Length - 1);
-		if(elevatorDirection == "ElevatorUp" && !ElevatorMoving && !ElevatorMax)
+		if(elevatorDirection == ElevatorDirection.Up && !ElevatorMoving && !ElevatorMax)
 		{
 			floorNumber += 1;
 		}
-		if(elevatorDirection == "ElevatorDown" && !ElevatorMoving && !ElevatorMin)
+		if(elevatorDirection == ElevatorDirection.Down && !ElevatorMoving && !ElevatorMin)
 		{
 			floorNumber -= 1;
 		}		
@@ -63,13 +69,13 @@ public class ElevatorController : MonoBehaviour {
 	
 	void FixedUpdate() {
 		Transform ElevatorFloor = ElevatorFloors[floorNumber];
-		if(elevatorDirection == "ElevatorUp")
+		if(elevatorDirection == ElevatorDirection.Up)
 		{
 			ElevatorMoving = true;
 			transform.position = Vector3.MoveTowards(transform.position, ElevatorFloor.position, elevatorSpeed);
 		}
 		
-		if(elevatorDirection == "ElevatorDown")
+		if(elevatorDirection == ElevatorDirection.Down)
 		{
 			ElevatorMoving = true;
 			transform.position = Vector3.MoveTowards(transform.position, ElevatorFloor.position, elevatorSpeed);

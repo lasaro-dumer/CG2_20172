@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
@@ -13,6 +14,8 @@ public class ObjectInteraction : MonoBehaviour
     [HideInInspector]
     public bool ElevatorMoving;
     private ElevatorController Elevator;
+    public GameObject m_ElevatorDoorController;
+    private ElevatorDoorController ElevatorDoor;
     private float throwForce;
     private bool grabbedShouldCollide;
     // Use this for initialization
@@ -20,6 +23,7 @@ public class ObjectInteraction : MonoBehaviour
     {
         grabbedObject = null;
         Elevator = m_ElevatorController.GetComponent<ElevatorController>();
+        ElevatorDoor = m_ElevatorDoorController.GetComponent<ElevatorDoorController>();
     }
 
     public GameObject GetTargettedObject()
@@ -72,6 +76,7 @@ public class ObjectInteraction : MonoBehaviour
     {
         bool can = candidate.GetComponent<Rigidbody>() != null;
         can = can && (candidate.layer == LayerMask.NameToLayer("InteractiveObjs"));
+        can = can && (candidate.tag == "grabbable");
         return can;
     }
 
@@ -86,33 +91,54 @@ public class ObjectInteraction : MonoBehaviour
             else
                 DropObject();
         }
-        else if (CrossPlatformInputManager.GetButtonDown("Throw"))
+        //else if (CrossPlatformInputManager.GetButtonDown("Throw"))
+        //{
+        //    if (grabbedObject != null)
+        //        ThrowObject();
+        //}
+        else if (CrossPlatformInputManager.GetButtonDown("Use"))
         {
-            if (grabbedObject != null)
-                ThrowObject();
-        }
-        else if (CrossPlatformInputManager.GetButtonDown("GoUp"))
-        {
-            Debug.Log("GoUp pressed");
-            if (!ElevatorMoving)
+            Usable usable = TryGetUsableObject(GetTargettedObject());
+            if (usable != null)
             {
-                //Call == "ElevatorUp" && 
-                Elevator.ElevatorGO("ElevatorUp");
+                Debug.Log("found usable");
+                usable.Use();
+            }
+            else
+            {
+                Debug.Log("didn't find usable");
             }
         }
-        else if (CrossPlatformInputManager.GetButtonDown("GoDown"))
-        {
-            Debug.Log("GoDown pressed");
-            if (!ElevatorMoving)
-            {
-                //Call == "ElevatorDown" && 
-                Elevator.ElevatorGO("ElevatorDown");
-            }
-        }
-        else
-        {
-            Debug.Log("ElevatorMoving:" + ElevatorMoving);
-        }
+        //else if (CrossPlatformInputManager.GetButtonDown("GoUp"))
+        //{
+        //    Debug.Log("GoUp pressed");
+        //    if (!ElevatorMoving)
+        //    {
+        //        //Call == "ElevatorUp" && 
+        //        Elevator.ElevatorGO(ElevatorController.ElevatorDirection.Up);
+        //    }
+        //}
+        //else if (CrossPlatformInputManager.GetButtonDown("GoDown"))
+        //{
+        //    Debug.Log("GoDown pressed");
+        //    if (!ElevatorMoving)
+        //    {
+        //        //Call == "ElevatorDown" && 
+        //        Elevator.ElevatorGO(ElevatorController.ElevatorDirection.Down);
+        //    }
+        //}
+        //else if (CrossPlatformInputManager.GetButtonDown("ToogleElevatorDoor"))
+        //{
+        //    Debug.Log("ToogleElevatorDoor pressed");
+        //    if (ElevatorDoor.IsOpen)
+        //    {
+        //        ElevatorDoor.CloseDoor();
+        //    }
+        //    else
+        //    {
+        //        ElevatorDoor.OpenDoor();
+        //    }
+        //}
 
 
         if (grabbedObject != null)
@@ -120,6 +146,22 @@ public class ObjectInteraction : MonoBehaviour
             Vector3 newPosition = Camera.main.transform.position + Camera.main.transform.forward * range;
             grabbedObject.transform.position = newPosition;
         }
+    }
+
+    private Usable TryGetUsableObject(GameObject useObject)
+    {
+        if (useObject == null || !CanUse(useObject))
+            return null;
+        Usable usable = useObject.GetComponent<Usable>();
+        return usable;
+    }
+
+    private bool CanUse(GameObject candidate)
+    {
+        bool can = candidate.GetComponent<Rigidbody>() != null;
+        can = can && (candidate.layer == LayerMask.NameToLayer("InteractiveObjs"));
+        can = can && (candidate.tag == "usable");
+        return can;
     }
 
     private void OnTriggerEnter(Collider other)
